@@ -6,17 +6,15 @@ import sbt.{AutoPlugin, Setting, settingKey, taskKey}
 object AccessibilityLinterPlugin extends AutoPlugin {
   override def trigger = allRequirements
 
-  object autoImport {
-    val helloGreeting = settingKey[String]("This is a greeting")
-    val hello = taskKey[Unit]("This says hello")
-  }
+  val helloGreeting = settingKey[String]("This is a key for a hello message")
+  val hello = taskKey[Unit]("This is a key to task to say hello")
 
-  import autoImport._
-
+  // This adds a value for the settingKey
   override lazy val globalSettings: Seq[Setting[_]] = Seq(
     helloGreeting := "Hello World",
   )
 
+  // This adds an implementation for the taskKey
   override lazy val projectSettings: Seq[Setting[_]] = Seq(
     hello := {
       val s = streams.value
