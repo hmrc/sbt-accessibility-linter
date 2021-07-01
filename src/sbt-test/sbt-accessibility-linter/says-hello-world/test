@@ -1,0 +1,2 @@
+# checks that the hello task does not error
+> hello

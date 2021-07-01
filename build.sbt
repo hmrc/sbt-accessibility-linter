@@ -9,5 +9,9 @@ lazy val root = (project in file("."))
       scalaBinaryVersion.value match {
         case "2.12" => "1.2.8" // set minimum sbt version
       }
-    }
+    },
+    scriptedLaunchOpts := { scriptedLaunchOpts.value ++
+      Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
+    },
+    scriptedBufferLog := false
   )

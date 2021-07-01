@@ -1,8 +1,7 @@
-package accessibility
+package uk.gov.hmrc
 
-import sbt._
-import Keys._
-
+import sbt.Keys.streams
+import sbt.{AutoPlugin, Setting, settingKey, taskKey}
 
 object AccessibilityLinterPlugin extends AutoPlugin {
   override def trigger = allRequirements
