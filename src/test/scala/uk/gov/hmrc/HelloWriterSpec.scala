@@ -11,7 +11,7 @@ class HelloWriterSpec extends WordSpec with MustMatchers {
       val expectedFile = new File("target/say-hello.txt")
       expectedFile.exists() mustBe false
 
-      HelloWriter.apply()
+      HelloWriter.apply(new File("target/"))
       expectedFile.exists() mustBe true
     }
   }

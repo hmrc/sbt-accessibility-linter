@@ -1,6 +1,6 @@
 package uk.gov.hmrc
 
-import sbt.Keys.streams
+import sbt.Keys.{streams, target}
 import sbt.librarymanagement.LibraryManagementSyntax
 import sbt.{AutoPlugin, Def, Setting, settingKey, taskKey}
 
@@ -15,7 +15,7 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
 
     val helloTwo = taskKey[Unit]("This a key to a second task to say hello")
     val helloWriterTask = Def.task {
-      HelloWriter()
+      HelloWriter(target.value)
     }
   }
 

@@ -1,11 +1,13 @@
 package uk.gov.hmrc
 
-import java.io.{FileWriter, PrintWriter}
+import sbt._
+
+import java.io.{File, PrintWriter}
 
 object HelloWriter {
 
-  def apply() = {
-    val printWriter = new PrintWriter("target/say-hello.txt")
+  def apply(destination: File) = {
+    val printWriter = new PrintWriter(destination / "say-hello.txt")
     try {
       printWriter.println("Hello World")
     } finally {
