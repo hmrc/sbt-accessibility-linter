@@ -1,22 +1,17 @@
-ThisBuild / version := "0.1.0-SNAPSHOT"
-ThisBuild / organization := "uk.gov.hmrc"
-
-lazy val root = (project in file("."))
+lazy val root = Project("sbt-accessibility-linter", file("."))
   .enablePlugins(SbtPlugin)
   .settings(
-    name := "sbt-accessibility-linter",
-    pluginCrossBuild / sbtVersion := {
-      scalaBinaryVersion.value match {
-        case "2.12" => "1.2.8" // set minimum sbt version
-      }
-    },
+    version := "0.1.0",
+    isPublicArtefact := true,
+    scalaVersion := "2.12.10",
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
     },
     scriptedBufferLog := false,
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.0.8" % "test"
+      "org.scalatest" %% "scalatest" % "3.0.8" % "test",
+      "org.pegdown" % "pegdown" % "1.6.0" % "test"
     )
   )
 
