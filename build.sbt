@@ -1,7 +1,7 @@
 lazy val root = Project("sbt-accessibility-linter", file("."))
   .enablePlugins(SbtPlugin)
   .settings(
-    version := "0.1.0",
+    majorVersion := 0,
     isPublicArtefact := true,
     scalaVersion := "2.12.10",
     scriptedLaunchOpts := {
