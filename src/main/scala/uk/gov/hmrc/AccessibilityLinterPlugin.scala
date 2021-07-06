@@ -18,7 +18,7 @@ package uk.gov.hmrc
 
 import sbt.Keys.{streams, target}
 import sbt.librarymanagement.LibraryManagementSyntax
-import sbt.{AutoPlugin, Def, Setting, settingKey, taskKey}
+import sbt.{AutoPlugin, Def, Setting, settingKey, taskKey, _}
 
 object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax {
   override def trigger = allRequirements
@@ -32,6 +32,17 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
     val helloTwo = taskKey[Unit]("This a key to a second task to say hello")
     val helloWriterTask = Def.task {
       HelloWriter(target.value)
+    }
+
+    val installLinter = taskKey[Unit]("Task to install npm dependencies")
+    val installLinterTask = Def.task {
+      val jarPath: String = getClass
+        .getProtectionDomain
+        .getCodeSource
+        .getLocation
+        .toURI
+        .getPath
+      DependencyInstaller(jarPath, target.value / "sbtaccessibilitylinter")
     }
   }
 
@@ -49,6 +60,7 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
       val g = helloGreeting.value
       s.log.info(g)
     },
-    helloTwo := helloWriterTask.value
+    helloTwo := helloWriterTask.value,
+    installLinter := installLinterTask.value
   )
 }

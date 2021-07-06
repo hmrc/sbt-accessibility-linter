@@ -1,0 +1,4 @@
+# checks that the install task does not error
+> installLinter
+
+# TODO: Add the exists checks https://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html#step+4%3A+write+a+script
