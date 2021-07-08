@@ -25,17 +25,33 @@ import scala.io.Source
 
 object DependencyInstaller {
 
-  def apply(sourceDirectory: String, targetDirectory: File) = {
-    val zf = new ZipFile(sourceDirectory)
-    val zipEntries = zf.entries.asScala.toIndexedSeq
-    zipEntries filter { (ze: ZipEntry) =>
-      ze.getName.startsWith("javascripts") && !ze.getName.endsWith("/")
-    } foreach  { (ze: ZipEntry) =>
-      val fileName: String = ze.getName
-      val source: Source = Source.fromInputStream(getClass.getResourceAsStream("/" + fileName))
-      val outFile: File = targetDirectory / fileName
-      IO.write(outFile, source.mkString)
+  /**
+   * Extract a subset of resources found in a JAR file to a directory.
+   *
+   * @param jarPath the path to the JAR file
+   * @param entryPrefix only extract JAR entries with the given prefix
+   * @param targetDirectory the destination directory as a [[File]]
+   */
+  def apply(jarPath: String, entryPrefix: String, targetDirectory: File): Unit = {
+    jarEntries(jarPath, entryPrefix) foreach  { (ze: ZipEntry) =>
+      writeResource("/" + ze.getName, targetDirectory)
     }
   }
 
+  private def jarEntries(jarPath: String, entryPrefix: String): Seq[ZipEntry] = {
+    val zipFile = new ZipFile(jarPath)
+    zipFile.entries.asScala.toIndexedSeq filter { (ze: ZipEntry) =>
+      ze.getName.startsWith(entryPrefix) && !ze.isDirectory
+    }
+  }
+
+  private def writeResource(path: String, targetDirectory: File): Unit = {
+    val source: Source = Source.fromInputStream(getClass.getResourceAsStream(path))
+
+    try {
+      IO.write(targetDirectory / path, source.mkString)
+    } finally {
+      source.close()
+    }
+  }
 }

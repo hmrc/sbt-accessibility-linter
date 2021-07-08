@@ -2,6 +2,7 @@
 
 !.gitignore
 !.scalafmt.conf
+!.eslintrc.json
 .bsp
 .cache
 /.classpath
@@ -15,7 +16,6 @@ eclipse
 .idea
 /.idea_modules
 *.iml
-lib
 lib_managed
 log
 logs
@@ -35,3 +35,4 @@ test-result
 tmp
 .idea_modules
 bin
+coverage

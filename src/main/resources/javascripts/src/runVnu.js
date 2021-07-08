@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 const { spawn } = require('child_process');
 const vnuJar = require('vnu-jar');
 

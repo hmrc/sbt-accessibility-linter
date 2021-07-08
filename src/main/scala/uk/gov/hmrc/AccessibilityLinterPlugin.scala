@@ -16,9 +16,11 @@
 
 package uk.gov.hmrc
 
-import sbt.Keys.{streams, target}
+import sbt.Keys.target
 import sbt.librarymanagement.LibraryManagementSyntax
-import sbt.{AutoPlugin, Def, Setting, settingKey, taskKey, _}
+import sbt._
+import java.io.File
+import scala.sys.process.Process
 
 object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax {
   override def trigger = allRequirements
@@ -26,41 +28,44 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
   // When an auto plugin provides a stable field such as val or object named autoImport, the contents of the field are
   // wildcard imported in set, eval, and .sbt files. https://www.scala-sbt.org/1.x/docs/Plugins.html
   object autoImport {
-    val helloGreeting = settingKey[String]("This is a key for a hello message")
-    val hello = taskKey[Unit]("This is a key to task to say hello")
-
-    val helloTwo = taskKey[Unit]("This a key to a second task to say hello")
-    val helloWriterTask = Def.task {
-      HelloWriter(target.value)
+    val a11yRoot = taskKey[File]("Builds the destination path for the a11y linter")
+    val a11yRootTask = Def.task {
+      target.value / "sbtaccessibilitylinter"
     }
-
-    val installLinter = taskKey[Unit]("Task to install npm dependencies")
-    val installLinterTask = Def.task {
+    val a11yExtract = taskKey[Unit]("Extract the a11y linter assets")
+    val a11yExtractTask = Def.task {
       val jarPath: String = getClass
         .getProtectionDomain
         .getCodeSource
         .getLocation
         .toURI
         .getPath
-      DependencyInstaller(jarPath, target.value / "sbtaccessibilitylinter")
+      DependencyInstaller(jarPath, "javascripts", a11yRoot.value)
+    }
+    val a11yInstall = taskKey[Unit]("Performs an npm install on the a11y linter assets")
+    val a11yInstallTask = Def.task {
+      a11yExtract.value
+      npmProcess("npm install failed for a11y linter")(a11yRoot.value / "javascripts", "install")
     }
   }
 
   import autoImport._
 
   // This adds a value for the settingKey
-  override lazy val globalSettings: Seq[Setting[_]] = Seq(
-    helloGreeting := "Hello World"
-  )
+  override lazy val globalSettings: Seq[Setting[_]] = Seq.empty
 
   // This adds implementation for the taskKeys
   override lazy val projectSettings: Seq[Setting[_]] = Seq(
-    hello := {
-      val s = streams.value
-      val g = helloGreeting.value
-      s.log.info(g)
-    },
-    helloTwo := helloWriterTask.value,
-    installLinter := installLinterTask.value
+    a11yRoot := a11yRootTask.value,
+    a11yExtract := a11yExtractTask.value,
+    a11yInstall := a11yInstallTask.value
   )
+
+  private def npmProcess(failureMessage: String)(base: File, args: String*): Int = {
+    val processBuilder = Process("npm" :: args.toList, base)
+    val exitValue      = processBuilder.run().exitValue()
+    if (exitValue != 0) {
+      throw new Exception(failureMessage)
+    } else exitValue
+  }
 }

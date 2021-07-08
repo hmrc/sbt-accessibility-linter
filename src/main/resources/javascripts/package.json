@@ -1,16 +1,31 @@
 {
-  "name": "tracking-consent-frontend-axe",
+  "name": "sbt-accessibility-linter",
   "version": "1.0.0",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "jest --collectCoverage && eslint"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "jest . --collectCoverage && npm run lint"
   },
   "dependencies": {
     "axe-core": "4.1.3",
     "jsdom": "16.5.2",
     "vnu-jar": "21.2.5"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run test"
+    }
+  },
   "devDependencies": {
-    "jest": "^26.6.3"
+    "eslint": "7.30.0",
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-plugin-import": "2.23.4",
+    "eslint-plugin-jest": "24.3.6",
+    "eslint-plugin-jsx-a11y": "6.4.1",
+    "eslint-plugin-react": "7.24.0",
+    "husky": "7.0.1",
+    "jest": "26.6.3"
   }
 }

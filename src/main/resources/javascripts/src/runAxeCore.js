@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 const axeCore = require('axe-core');
 const axeConfig = require('./axeConfig');
 

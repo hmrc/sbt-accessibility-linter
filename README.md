@@ -25,9 +25,8 @@ resolvers += Resolver.url("HMRC-open-artefacts-ivy2", url("https://open.artefact
 
 Once you have added the library, you can now run the following tasks:
 
-1. `sbt hello` - This will print `Hello World` to your `sbt` cnsole
-1. `sbt helloTwo` - This will create a file `say-hello.txt` in your `/target/` folder. The contents of the
-   `say-hello.txt` file will be `Hello World`.
+1. `sbt a11yExtract` - This will extract the a11y linter assets to `/target/sbtaccessibilitylinter`
+1. `sbt a11yInstall` - This will extract and install the a11y linter to `/target/sbtaccessibilitylinter`
 
 ## Testing
 
