@@ -19,17 +19,26 @@ package uk.gov.hmrc
 import org.scalatest.{MustMatchers, WordSpec}
 
 import java.io.File
+import java.nio.file.Files
+import scala.io.Source
+import sbt._
 
-class HelloWriterSpec extends WordSpec with MustMatchers {
+class DependencyInstallerSpec extends WordSpec with MustMatchers {
 
-  "Given a Hello Writer, calling apply" should {
-    "write expected text to the expected file" in {
-      val expectedFile = new File("target/say-hello.txt")
-      expectedFile.exists() mustBe false
+  "Given a DependencyInstaller, calling apply" should {
+    "write expected files to the provided location" in {
+      val testJarPath = new File("lib/test-jar.jar").getPath
 
-      HelloWriter.apply(new File("target/"))
-      expectedFile.exists() mustBe true
+      val outputPath = Files.createTempDirectory("sbt-accessibility-linter").toFile
+      outputPath.deleteOnExit()
+
+      DependencyInstaller(testJarPath, "js", outputPath)
+
+      val expectedFile = outputPath / "js" / "src" / "test.js"
+      expectedFile must exist
+
+      val expectedSource = Source.fromFile(expectedFile)
+      expectedSource.mkString mustBe "/* this is a comment */"
     }
   }
-
 }

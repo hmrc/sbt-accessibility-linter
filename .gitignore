@@ -2,6 +2,7 @@
 
 !.gitignore
 !.scalafmt.conf
+!.eslintrc.json
 .bsp
 .cache
 /.classpath
@@ -15,11 +16,11 @@ eclipse
 .idea
 /.idea_modules
 *.iml
-lib
 lib_managed
 log
 logs
 modules
+node_modules
 /out
 precompiled
 /.project
@@ -34,3 +35,4 @@ test-result
 tmp
 .idea_modules
 bin
+coverage
