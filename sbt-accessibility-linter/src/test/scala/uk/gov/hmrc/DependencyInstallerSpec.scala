@@ -27,7 +27,7 @@ class DependencyInstallerSpec extends WordSpec with MustMatchers {
 
   "Given a DependencyInstaller, calling apply" should {
     "write expected files to the provided location" in {
-      val testJarPath = new File("lib/test-jar.jar").getPath
+      val testJarPath = new File("sbt-accessibility-linter/lib/test-jar.jar").getPath
 
       val outputPath = Files.createTempDirectory("sbt-accessibility-linter").toFile
       outputPath.deleteOnExit()
