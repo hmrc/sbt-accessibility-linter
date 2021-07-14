@@ -40,12 +40,12 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
         .getLocation
         .toURI
         .getPath
-      DependencyInstaller(jarPath, "javascripts", a11yRoot.value)
+      DependencyInstaller(jarPath, "js", a11yRoot.value)
     }
     val a11yInstall = taskKey[Unit]("Performs an npm install on the a11y linter assets")
     val a11yInstallTask = Def.task {
       a11yExtract.value
-      npmProcess("npm install failed for a11y linter")(a11yRoot.value / "javascripts", "install")
+      npmProcess("npm install failed for a11y linter")(a11yRoot.value / "js", "install")
     }
   }
 

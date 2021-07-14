@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const runVnu = require('./src/vnu');
+const runVnu = require('./vnu/vnu');
 
 runVnu(process.stdin).then((data) => {
   console.log(data);

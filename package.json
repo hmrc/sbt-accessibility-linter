@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "license": "Apache-2.0",
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "test": "jest . --collectCoverage && npm run lint"
+    "lint": "eslint js",
+    "lint:fix": "eslint js --fix",
+    "test": "jest js --collectCoverage && npm run lint"
   },
   "dependencies": {
     "axe-core": "4.1.3",
