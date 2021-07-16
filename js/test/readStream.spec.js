@@ -1,5 +1,5 @@
 const Stream = require('stream');
-const readStream = require('../src/readStream');
+const readStream = require('../src/common/readStream');
 
 describe('readStream', () => {
   it('should convert a stream to a string', async () => {

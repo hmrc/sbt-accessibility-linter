@@ -1,4 +1,4 @@
-const mount = require('../src/mount');
+const mount = require('../src/common/mount');
 
 describe('mount', () => {
   it('should mount some content into the DOM', async () => {

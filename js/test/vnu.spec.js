@@ -1,8 +1,8 @@
 const stream = require('stream');
 
-jest.mock('../src/runVnu');
-const runVnu = require('../src/runVnu');
-const vnu = require('../src/vnu');
+jest.mock('../src/vnu/runVnu');
+const runVnu = require('../src/vnu/runVnu');
+const vnu = require('../src/vnu/vnu');
 
 describe('vnu', () => {
   const createStream = (content) => {

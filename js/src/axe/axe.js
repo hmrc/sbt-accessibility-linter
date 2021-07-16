@@ -1,5 +1,5 @@
-const readStream = require('./readStream');
-const mount = require('./mount');
+const readStream = require('../common/readStream');
+const mount = require('../common/mount');
 const runAxeCore = require('./runAxeCore');
 
 async function axe(inputStream) {

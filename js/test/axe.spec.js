@@ -1,8 +1,8 @@
 const stream = require('stream');
-const axe = require('../src/axe');
+const axe = require('../src/axe/axe');
 
-jest.mock('../src/runAxeCore');
-const runAxeCore = require('../src/runAxeCore');
+jest.mock('../src/axe/runAxeCore');
+const runAxeCore = require('../src/axe/runAxeCore');
 
 describe('axe', () => {
   const getTestDataStream = (content) => {

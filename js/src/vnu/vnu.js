@@ -1,5 +1,5 @@
 const runVnu = require('./runVnu');
-const readStream = require('./readStream');
+const readStream = require('../common/readStream');
 
 const getVnuErrors = (output) => JSON.parse(output).messages.filter(({ type }) => type === 'error');
 
