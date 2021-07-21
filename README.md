@@ -37,6 +37,22 @@ To run the unit tests, run the command `sbt test`.
 
 To run the plugin tests, run the command `sbt scripted`.
 
+## Publishing
+
+When testing locally in conjunction with a frontend microservice, it's possible to publish the plugin and
+library artifacts as follows:
+
+```bash
+sbt publishLocal
+```
+
+In the build environment, the plugin and library artifacts are built and published separately using two separate build jobs.
+This is to ensure the plugin is published using Ivy and the library is published using Maven as required
+by the MDTP platform.
+
+This is achieved by prefixing the sbt command in the library build job with `"project scalatest-accessibility-linter"` 
+and the sbt command in the plugin build job with `"project sbt-accessibility-linter"`.
+
 ## License
 
 This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
