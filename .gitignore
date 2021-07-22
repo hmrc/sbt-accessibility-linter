@@ -3,6 +3,7 @@
 !.gitignore
 !.scalafmt.conf
 !.eslintrc.json
+!.nvmrc
 .bsp
 .cache
 /.classpath
