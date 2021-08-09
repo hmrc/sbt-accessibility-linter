@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc
 
-import sbt.Keys.target
+import sbt.Keys.{libraryDependencies, target}
 import sbt.librarymanagement.LibraryManagementSyntax
 import sbt._
+
 import java.io.File
 import scala.sys.process.Process
 
@@ -54,11 +55,14 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
   // This adds a value for the settingKey
   override lazy val globalSettings: Seq[Setting[_]] = Seq.empty
 
-  // This adds implementation for the taskKeys
+  // This adds implementation for the taskKeys and additional library dependencies
   override lazy val projectSettings: Seq[Setting[_]] = Seq(
     a11yRoot := a11yRootTask.value,
     a11yExtract := a11yExtractTask.value,
-    a11yInstall := a11yInstallTask.value
+    a11yInstall := a11yInstallTask.value,
+    libraryDependencies ++= Seq(
+      "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.1.0" % Test
+    )
   )
 
   private def npmProcess(failureMessage: String)(base: File, args: String*): Int = {
