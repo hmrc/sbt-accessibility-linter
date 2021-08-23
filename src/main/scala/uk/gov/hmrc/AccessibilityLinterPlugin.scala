@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc
 
-import sbt.Keys.{libraryDependencies, target}
+import sbt.Keys.{libraryDependencies, sourceGenerators, sourceManaged, target}
 import sbt.librarymanagement.LibraryManagementSyntax
 import sbt._
 
@@ -61,8 +61,30 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
     a11yExtract := a11yExtractTask.value,
     a11yInstall := a11yInstallTask.value,
     libraryDependencies ++= Seq(
-      "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.2.0" % Test
-    )
+      "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.4.0-SNAPSHOT" % Test
+    ),
+    Test / sourceGenerators += Def.task {
+      val file = (Test / sourceManaged).value / "sbtaccessibilitylinter.scala"
+      IO.write(file, """package uk.gov.hmrc.sbtaccessibilitylinter
+                       |
+                       |import java.io.File
+                       |import org.scalatest.{Informing, Alerting}
+                       |import scala.sys.process.Process
+                       |import uk.gov.hmrc.scalatestaccessibilitylinter.{AccessibilityLinterMatchers, AccessibilityLinter, KnownIssues}
+                       |import uk.gov.hmrc.scalatestaccessibilitylinter.linters.{AxeAccessibilityLinter, SystemSubprocess}
+                       |
+                       |trait AccessibilityLintersAndMatchers extends AccessibilityLinterMatchers { this: Informing with Alerting =>
+                       |  private val knownIssues: KnownIssues = KnownIssues.loadFromApplicationConfig
+                       |
+                       |  protected val accessibilityLinters: Seq[AccessibilityLinter] = Seq(
+                       |    AxeAccessibilityLinter(
+                       |      SystemSubprocess(Process("node axe", new File("target/sbtaccessibilitylinter/js"))),
+                       |      knownIssues
+                       |    )
+                       |  )
+                       |}""".stripMargin)
+      Seq(file)
+    }.taskValue
   )
 
   private def npmProcess(failureMessage: String)(base: File, args: String*): Int = {
