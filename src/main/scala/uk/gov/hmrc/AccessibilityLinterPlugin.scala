@@ -61,7 +61,7 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
     a11yExtract := a11yExtractTask.value,
     a11yInstall := a11yInstallTask.value,
     libraryDependencies ++= Seq(
-      "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.2.0" % Test
+      "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.4.0" % Test
     )
   )
 

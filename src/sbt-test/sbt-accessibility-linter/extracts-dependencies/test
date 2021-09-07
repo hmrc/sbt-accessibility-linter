@@ -1,3 +1,3 @@
 # checks that the install task does not error
 > a11yInstall
-$ exists target/sbtaccessibilitylinter/js/vnu/vnu.js
+$ exists target/sbtaccessibilitylinter/js/axe/axe.js
