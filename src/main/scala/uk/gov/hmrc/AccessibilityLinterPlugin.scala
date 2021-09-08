@@ -16,10 +16,9 @@
 
 package uk.gov.hmrc
 
-import sbt.Keys.{libraryDependencies, target}
 import sbt.librarymanagement.LibraryManagementSyntax
 import sbt._
-
+import sbt.Keys._
 import java.io.File
 import scala.sys.process.Process
 
@@ -48,6 +47,7 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
       a11yExtract.value
       npmProcess("npm install failed for a11y linter")(a11yRoot.value / "js", "install")
     }
+    val a11yTest = taskKey[Unit]("Performs sbt test after installing the required npm assets")
   }
 
   import autoImport._
@@ -60,8 +60,9 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
     a11yRoot := a11yRootTask.value,
     a11yExtract := a11yExtractTask.value,
     a11yInstall := a11yInstallTask.value,
+    a11yTest := (test in Test).dependsOn(a11yInstall).value,
     libraryDependencies ++= Seq(
-      "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.4.0" % Test
+      "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.5.0" % Test
     )
   )
 

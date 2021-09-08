@@ -11,8 +11,8 @@ lazy val root = Project(libName, file("."))
     isPublicArtefact := true,
     majorVersion := 0,
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.0.8" % "test",
-      "org.pegdown" % "pegdown" % "1.6.0" % "test"
+      "org.scalatest" %% "scalatest" % "3.2.9" % "test",
+      "com.vladsch.flexmark" %  "flexmark-all" % "0.35.10" % "test"
     ),
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
