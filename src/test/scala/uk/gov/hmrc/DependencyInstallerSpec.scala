@@ -16,14 +16,15 @@
 
 package uk.gov.hmrc
 
-import org.scalatest.{MustMatchers, WordSpec}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 import java.io.File
 import java.nio.file.Files
 import scala.io.Source
 import sbt._
 
-class DependencyInstallerSpec extends WordSpec with MustMatchers {
+class DependencyInstallerSpec extends AnyWordSpec with Matchers {
 
   "Given a DependencyInstaller, calling apply" should {
     "write expected files to the provided location" in {

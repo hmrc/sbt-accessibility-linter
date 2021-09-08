@@ -1,0 +1,4 @@
+# checks that a11yTest installs the Node tools and runs the test suite
+> a11yTest
+$ exists target/sbtaccessibilitylinter/js/node_modules/axe-core
+$ exists target/proof-tests-ran.txt
