@@ -20,7 +20,14 @@ It's highly recommended that you familiarise yourself with the following guidanc
 
 ## Quick start
 
-Firstly, you will need [Node.js](https://nodejs.org/en/) installed locally. 
+`sbt-accessibility-linter` is designed to work with Scala frontend microservices build using Play 2.8 and Scalatest 3.2
+or above. If you are currently using Scalatest 3.0 or below, you will need to update references to *Spec and Matchers
+traits as per the Scalatest 3.1 [release notes](https://www.scalatest.org/release_notes/3.1.0) because this library
+will evict previous versions of Scalatest.
+
+If you are still using Play 2.7 or below, complete your upgrade to Play 2.8 before attempting to use this plugin.
+
+You will need [Node.js](https://nodejs.org/en/) installed locally. 
 sbt-accessibility-linter is designed to work with Node v12 or above.
 
 To use this plugin in your project, add the following line to your `plugins.sbt` in your `project` folder:
