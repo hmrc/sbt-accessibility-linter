@@ -17,8 +17,10 @@
 package uk.gov.hmrc
 
 import sbt.librarymanagement.LibraryManagementSyntax
-import sbt._
+import sbt.{Configuration, Def, _}
 import sbt.Keys._
+import sbt.internal.DslEntry
+
 import java.io.File
 import scala.sys.process.Process
 
@@ -47,7 +49,13 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
       a11yExtract.value
       npmProcess("npm install failed for a11y linter")(a11yRoot.value / "js", "install")
     }
-    val a11yTest = taskKey[Unit]("Performs sbt test after installing the required npm assets")
+    val a11yTest = taskKey[Unit]("Runs tests in the accessibility folder after installing the required npm assets\"")
+
+    val AccessibilityTest         = config("accessibility") extend Test
+    val accessibilityTestSettings = inConfig(AccessibilityTest)(Defaults.testTasks) ++
+        Seq(
+          (testOptions in AccessibilityTest) := Seq(Tests.Filter(_ startsWith "accessibility")),
+        )
   }
 
   import autoImport._
@@ -55,16 +63,19 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
   // This adds a value for the settingKey
   override lazy val globalSettings: Seq[Setting[_]] = Seq.empty
 
+  // This adds the accessibility test configuration
+  override val projectConfigurations: Seq[Configuration] = Seq(AccessibilityTest)
+
   // This adds implementation for the taskKeys and additional library dependencies
   override lazy val projectSettings: Seq[Setting[_]] = Seq(
     a11yRoot := a11yRootTask.value,
     a11yExtract := a11yExtractTask.value,
     a11yInstall := a11yInstallTask.value,
-    a11yTest := (test in Test).dependsOn(a11yInstall).value,
+    a11yTest := (test in AccessibilityTest).dependsOn(a11yInstall).value,
     libraryDependencies ++= Seq(
       "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.6.0" % Test
-    )
-  )
+    ),
+  ) ++ accessibilityTestSettings
 
   private def npmProcess(failureMessage: String)(base: File, args: String*): Int = {
     val processBuilder = Process("npm" :: args.toList, base)
