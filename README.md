@@ -48,6 +48,36 @@ resolvers += Resolver.url("HMRC-open-artefacts-ivy2", url("https://open.artefact
 )
 ```
 
+## Setting up the accessibility test folder
+
+All accessibility tests by default will live under the ``a11y`` folder in the project root directory, you may need to create
+this folder if it does not exist already.
+
+```
+example-project
+  ├─ src
+  ├─ test
+  ├─ a11y   <--- folder for accessibility tests
+```
+
+If you wish to override the base path of the ``a11y`` test folder you can apply the following settings with
+a custom path. This will also allow you to change the folder ``a11y`` name if you wish to.
+
+```
+.settings(
+    A11yTest / unmanagedSourceDirectories += (baseDirectory.value / "test" / "a11y")
+ )
+```
+
+The example settings above would place the ``a11y`` folder under the test directory.
+
+```
+example-project
+  ├─ src
+  ├─ test
+     ├─ a11y
+```
+
 ## Running accessibility checks
 
 The simplest way to introduce accessibility testing is to add additional assertions
@@ -80,10 +110,10 @@ class AnyPageSpec
 }
 ```
 
-To run the tests do,
+To run the tests you can do,
 
 ```shell script
-sbt a11yTest
+sbt a11y:test
 ```
 
 The above command is a swap-in replacement for `sbt test`.
@@ -91,8 +121,8 @@ The above command is a swap-in replacement for `sbt test`.
 Once you have added these tests, you will need to modify your `SbtMicroserviceJobBuilder` job definition in
 build jobs to ensure the tests work in CI.
 
-To do this, simply change `test` to `a11yTest` in the line similar to `.withTests("test it:test")`. If you do not 
-already invoke `withTests` directly, add `.withTests("a11yTest it:test")` to your `SbtMicroserviceJobBuilder` job
+To do this, simply change `test` to `a11y:test` in the line similar to `.withTests("test it:test")`. If you do not 
+already invoke `withTests` directly, add `.withTests("test a11y:test it:test")` to your `SbtMicroserviceJobBuilder` job
 definition to replace the default behaviour.
 
 ## Interpreting test failures
