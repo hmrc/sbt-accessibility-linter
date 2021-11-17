@@ -70,7 +70,7 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
     a11yRoot := a11yRootTask.value,
     a11yExtract := a11yExtractTask.value,
     a11yInstall := a11yInstallTask.value,
-    A11yTest / testOptions += Tests.Setup( () => a11yInstall.value ),
+    A11yTest / testOptions := Seq(Tests.Setup( () => a11yInstall.value )),
     libraryDependencies ++= Seq(
       "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.6.0" % Test
     ),
