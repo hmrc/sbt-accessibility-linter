@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
     a11yInstall := a11yInstallTask.value,
     A11yTest / testOptions := Seq(Tests.Setup( () => a11yInstall.value )),
     libraryDependencies ++= Seq(
-      "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.6.0" % Test
+      "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.7.0" % Test
     ),
   ) ++ a11yTestSettings
 
