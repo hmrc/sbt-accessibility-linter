@@ -1,5 +1,8 @@
 import scala.sys.process._
 
+val scala2_12 = "2.12.13"
+val scala2_13 = "2.13.7"
+
 val libName = "sbt-accessibility-linter"
 val npmTest = TaskKey[Unit]("npm-test")
 
@@ -7,7 +10,8 @@ lazy val root = Project(libName, file("."))
   .enablePlugins(SbtPlugin)
   .settings(
     name := libName,
-    scalaVersion := "2.12.13",
+    scalaVersion := scala2_12,
+    crossScalaVersions := Seq(scala2_12, scala2_13),
     isPublicArtefact := true,
     majorVersion := 0,
     libraryDependencies ++= Seq(
