@@ -118,12 +118,16 @@ sbt a11y:test
 
 The above command is a swap-in replacement for `sbt test`.
 
-Once you have added these tests, you will need to modify your `SbtMicroserviceJobBuilder` job definition in
-build jobs to ensure the tests work in CI.
+### Running accessibility checks in Jenkins
 
-To do this, simply change `test` to `a11y:test` in the line similar to `.withTests("test it:test")`. If you do not 
-already invoke `withTests` directly, add `.withTests("test a11y:test it:test")` to your `SbtMicroserviceJobBuilder` job
-definition to replace the default behaviour.
+It is possible to run your accessibility linter checks in Jenkins, as part of your CI build. You will need to make the following changes to your 
+service’s Groovy file in the [build-jobs](https://github.com/hmrc/build-jobs) repository.
+
+1. Navigate to your team or service’s `.groovy` file. For example, this is the [platui.groovy](https://github.com/hmrc/build-jobs/blob/main/jobs/live/platui.groovy) file.
+1. Within your service’s `SbtMicroserviceJobBuilder` section, within the `.withTests(...)` section, add in `a11y:test` to the list of tests (see [this example](https://github.com/hmrc/build-jobs/blob/main/jobs/live/platui.groovy#L448) from PlatUI’s `accessiblity-statement-frontend` microservice).
+1. If you have not already added as part of your build, you will need to add NodeJS to your build pipeline by adding the call `.withNodeJs(NODE_LTS)` to your JobBuilder (see [this example](https://github.com/hmrc/build-jobs/blob/main/jobs/live/platui.groovy#L449)).
+
+Adding the above to your build job will ensure that the accessibility linter tests run as part of your Jenkins build.
 
 ## Interpreting test failures
 
