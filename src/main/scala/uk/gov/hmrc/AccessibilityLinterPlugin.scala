@@ -21,7 +21,7 @@ import sbt.{Configuration, Def, Setting, inConfig, _}
 import sbt.Keys._
 
 import java.io.File
-import scala.sys.process.Process
+import scala.sys.process.{Process, ProcessLogger}
 
 object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax {
   override def trigger = allRequirements
@@ -77,7 +77,8 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
 
   private def npmProcess(failureMessage: String)(base: File, args: String*): Int = {
     val processBuilder = Process("npm" :: args.toList, base)
-    val exitValue      = processBuilder.run().exitValue()
+    // TODO maybe display if it fails but suppress the message if it was ok
+    val exitValue      = processBuilder.run(ProcessLogger(_ => ())).exitValue()
     if (exitValue != 0) {
       throw new Exception(failureMessage)
     } else exitValue
