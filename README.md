@@ -63,7 +63,7 @@ example-project
 If you wish to override the base path of the ``a11y`` test folder you can apply the following settings with
 a custom path. This will also allow you to change the folder ``a11y`` name if you wish to.
 
-```
+```scala
 .settings(
     A11yTest / unmanagedSourceDirectories += (baseDirectory.value / "test" / "a11y")
  )
@@ -116,7 +116,7 @@ To run the tests you can do,
 sbt a11y:test
 ```
 
-The above command is a swap-in replacement for `sbt test`.
+The above command is a swap-in replacement for `sbt test`, but also installs the npm dependencies needed by the linter.
 
 ### Running accessibility checks in Jenkins
 
@@ -124,8 +124,8 @@ It is possible to run your accessibility linter checks in Jenkins, as part of yo
 service’s Groovy file in the [build-jobs](https://github.com/hmrc/build-jobs) repository.
 
 1. Navigate to your team or service’s `.groovy` file. For example, this is the [platui.groovy](https://github.com/hmrc/build-jobs/blob/main/jobs/live/platui.groovy) file.
-1. Within your service’s `SbtMicroserviceJobBuilder` section, within the `.withTests(...)` section, add in `a11y:test` to the list of tests (see [this example](https://github.com/hmrc/build-jobs/blob/main/jobs/live/platui.groovy#L448) from PlatUI’s `accessiblity-statement-frontend` microservice).
-1. If you have not already added as part of your build, you will need to add NodeJS to your build pipeline by adding the call `.withNodeJs(NODE_LTS)` to your JobBuilder (see [this example](https://github.com/hmrc/build-jobs/blob/main/jobs/live/platui.groovy#L449)).
+1. Within your service’s `SbtMicroserviceJobBuilder` section, within the `.withTests(...)` section, add in `a11y:test` to the list of tests (see [this example](https://github.com/hmrc/build-jobs/blob/2fe69ac6/jobs/live/platui.groovy#L455) from PlatUI’s `accessiblity-statement-frontend` microservice).
+1. If you have not already added as part of your build, you will need to add NodeJS to your build pipeline by adding the call `.withNodeJs(NODE_LTS)` to your JobBuilder (see [this example](https://github.com/hmrc/build-jobs/blob/2fe69ac6/jobs/live/platui.groovy#L456)).
 
 Adding the above to your build job will ensure that the accessibility linter tests run as part of your Jenkins build.
 
@@ -152,41 +152,51 @@ overridden with role=\"none\" or role=\"presentation\"","snippet":"<input type=\
 
 The above error was caused by deliberately adding an unlabeled lone `<input type="text" />` into a page.
 
-In the case of known issues with HMRC or GOV.UK frontend libraries, you will see green passing
-tests, but with info or warning level messages similar the following:
-
+## Setting the output format
+Initial feedback from some users was that the output from the tool was sometimes difficult to read,
+due to sheer volume of output in JSON-lines format.  We have added the ability for teams to choose from
+two different output formats - "verbose" (the default) and "concise", which shows just
+the error description and, for axe accessibility errors, a CSS selector giving its location, plus a URL to
+the relevant guidance on the Deque University website. For example,
 ```text
-[info] - should pass accessibility checks
-[info]   + axe found no problems.
-[info]   + vnu found 4 potential problem(s):
-[info]   + {"level":"INFO","description":"The “banner” role is unnecessary for element 
-“header”.","snippet":" \n  \n    \n<header role=\"banner\">\n    <","helpUrl":"UNDEFINED",
-"furtherInfo":"To support IE8-10 which have no or partial support for HTML5.  govuk-frontend 
-won't fix this while we support older versions of IE.  See known govuk-frontend issues: 
-https://github.com/alphagov/govuk-frontend/issues/1280#issuecomment-509588851"}
-[info]   + {"level":"WARNING","description":"Attribute “src” not allowed on element “image” at 
-this point.","snippet":"          
-<image src=\"/contact/hmrc-frontend/assets/govuk/images/govuk-logotype-crown.png\" 
-xlink:href=\"\"\n               class=\"govuk-header__logotype-crown-fallback-image\" width=\"36\" 
-height=\"32\"></imag","helpUrl":"UNDEFINED","furtherInfo":"The <image> element is a valid SVG element. In SVG, you 
-would specify the URL of the image file with the xlink:href – as we don't reference an image it has no effect. It's 
-important to include the empty xlink:href attribute as this prevents versions of IE which support SVG from downloading 
-the fallback image when they don't need to.  See known govuk-frontend issues: 
-https://github.com/alphagov/govuk-frontend/issues/1280#issuecomment-509588851"}
-[info]   + {"level":"INFO","description":"The “main” role is unnecessary for element “main”.",
-"snippet":"  \n\n      <main class=\"govuk-main-wrapper govuk-main-wrapper--auto-spacing\" 
-id=\"main-content\" role=\"main\">\n     ","helpUrl":"UNDEFINED","furtherInfo":"While this 
-is a valid finding, applying a role to a <main> tag will have no effect on the page usability 
-or accessibility.  It does however fix potential issues for users of Firefox <=20.x and Chrome <=25.0."}
-[info]   + {"level":"INFO","description":"The “contentinfo” role is unnecessary for element 
-“footer”.","snippet":">\n\n    \n  <footer class=\"govuk-footer \" role=\"contentinfo\">\n 
-<div","helpUrl":"UNDEFINED","furtherInfo":"To support IE8-10 which have no or partial support 
-for HTML5.  govuk-frontend won't fix this while we support older versions of IE.  See known 
-govuk-frontend issues: https://github.com/alphagov/govuk-frontend/issues/1280#issuecomment-509588851"}
+[info]   - passes accessibility checks *** FAILED ***
+[info]     Accessibility violations were present. (ExamplePagesFromRealServicesSpec.scala:13)
+[info]     + axe found 4 potential problem(s): 
+[info]     + - Ensures every id attribute value is unique 
+[info]     +   (.cash-account > .available-account-balance.custom-card__balance.govuk-body) 
+[info]     +   https://dequeuniversity.com/rules/axe/4.1/duplicate-id?application=axeAPI 
+[info]     + - Ensures every id attribute value is unique 
+[info]     +   (.duty-deferment-account.custom-card.govuk-\!-margin-bottom-7:nth-child(3) > .card-main > .available-account-balance.custom-card__balance.govuk-body) 
+[info]     +   https://dequeuniversity.com/rules/axe/4.1/duplicate-id?application=axeAPI 
+[info]     + - Ensures links have discernible text 
+[info]     +   (.custom-card__footer > .govuk-link:nth-child(3)) 
+[info]     +   https://dequeuniversity.com/rules/axe/4.1/link-name?application=axeAPI 
+[info]     + - Ensures all page content is contained by landmarks 
+[info]     +   (input) 
+[info]     +   https://dequeuniversity.com/rules/axe/4.1/region?application=axeAPI 
+[info]     + vnu found 2 potential problem(s): 
+[info]     + - Element “h3” not allowed as child of element “strong” in this context. (Suppressing further errors from this subtree.) 
+[info]     + - Duplicate ID “duty-deferment-balance”. 
 ```
 
-In some cases, it may be possible to resolve them by upgrading to the latest versions of 
-`play-frontend-hmrc`. This should be indicated as an option, if possible.
+You can override the default output format by adding the following configuration to your `application.conf`:
+```hocon
+sbt-accessibility-linter {
+  output-format = "concise"
+}
+```
+You can also override it on a per-test level (for example, when debugging a new failure),
+by passing the desired output format as a parameter to the matcher:
+```scala
+  "the page" must {
+    val anyPage = app.injector.instanceOf[AnyPage]
+    val content = anyPage()
+  
+    "pass accessibility checks" in {
+      content.toString() must passAccessibilityChecks(OutputFormat.Verbose)
+    }
+  }
+```
 
 ## What to do if you encounter an unknown issue in play-frontend-hmrc
 

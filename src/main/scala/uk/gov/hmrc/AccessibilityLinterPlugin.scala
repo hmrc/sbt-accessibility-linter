@@ -21,7 +21,8 @@ import sbt.{Configuration, Def, Setting, inConfig, _}
 import sbt.Keys._
 
 import java.io.File
-import scala.sys.process.Process
+import scala.collection.mutable.ListBuffer
+import scala.sys.process.{Process, ProcessLogger}
 
 object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax {
   override def trigger = allRequirements
@@ -71,14 +72,17 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
     a11yInstall := a11yInstallTask.value,
     A11yTest / testOptions := Seq(Tests.Setup( () => a11yInstall.value )),
     libraryDependencies ++= Seq(
-      "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.11.0" % Test
+      "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.13.0" % Test
     ),
   ) ++ a11yTestSettings
 
   private def npmProcess(failureMessage: String)(base: File, args: String*): Int = {
-    val processBuilder = Process("npm" :: args.toList, base)
-    val exitValue      = processBuilder.run().exitValue()
+    val processBuilder  = Process("npm" :: args.toList, base)
+    val npmOutput       = ListBuffer.empty[String]
+    val capturingLogger = ProcessLogger(npmOutput.append(_))
+    val exitValue       = processBuilder.run(capturingLogger).exitValue()
     if (exitValue != 0) {
+      npmOutput.result() foreach println
       throw new Exception(failureMessage)
     } else exitValue
   }
