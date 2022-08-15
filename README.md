@@ -48,7 +48,141 @@ resolvers += Resolver.url("HMRC-open-artefacts-ivy2", url("https://open.artefact
 )
 ```
 
-## Setting up the accessibility test folder
+## Plugin Setup
+
+There are two different approaches to writing accessibility tests, you may choose the approach that
+suits your team best.
+
+## How to setup automatic accessibility testing
+
+Automatic accessibility testing allows you to write tests via a single spec, it can do this by
+automatically scanning through your projects views for page templates.
+
+### High level of how it works
+* using reflection to discover page templates
+* using the Play app injector to get an instance of each template
+* using scalacheck/magnolia to derive arbitrary values for any template parameters
+* using these arbitrary values to instantiate each page and test it for accessibility
+
+### Which testing approach is best for your team
+#### Manual accessibility testing
+* Teams might already have the linter and some coverage via their view unit tests, and may want to continue down that route.
+#### Automatic accessibility testing
+* Teams adopting the linter for the first time might find it easier to go with the automated route.
+
+### Setup
+
+1. Copy the template spec below into your project
+
+    ```scala
+    import org.scalacheck.Arbitrary
+    import play.api.data.Form
+    import play.twirl.api.Html
+    import uk.gov.hmrc.scalatestaccessibilitylinter.views.AutomaticAccessibilitySpec
+    import views.html._
+    import scala.collection.mutable.ListBuffer
+    
+    class FrontendAccessibilitySpec
+      extends AutomaticAccessibilitySpec {
+    
+      // Some view template parameters can't be completely arbitrary, 
+      // but need to have sane values for pages to render properly.  
+      // eg. if there is validation or conditional logic in the twirl template.  
+      // These can be provided by calling `fixed()` to wrap an existing concrete value.
+      /** example
+          val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+          implicit val arbConfig: Arbitrary[AppConfig] = fixed(appConfig)
+      */
+        
+      // Another limitation of the framework is that it can generate Arbitrary[T] but not Arbitrary[T[_]],
+      // so any nested types (like a Play `Form[]`) must similarly be provided by wrapping
+      // a concrete value using `fixed()`.  Usually, you'll have a value you can use somewhere else
+      // in your codebase - either in your production code or another test.
+      // Note - these values are declared as `implicit` to simplify calls to `render()` below
+      // e.g implicit val arbReportProblemPage: Arbitrary[Form[ReportProblemForm]] = fixed(reportProblemForm)
+    
+      // This is the package where the page templates are located in your service
+      val viewPackageName = "views.html"
+    
+      // This is the layout class or classes which are injected into all full pages in your service.
+      // This might be `HmrcLayout` or some custom class(es) that your service uses as base page templates.
+      val layoutClasses = Seq(classOf[views.html.components.Layout])
+    
+      // this partial function wires up the generic render() functions with arbitrary instances of the correct types.
+      // Important: there's a known issue with intellij incorrectly displaying warnings here, you should be able to ignore these for now.
+      /** example
+          override def renderViewByClass: PartialFunction[Any, Html] = {
+             case reportProblemPage: ReportProblemPage => render(reportProblemPage)
+          }
+      */
+      
+      runAccessibilityTests()
+    }
+    ```
+
+2. Run your tests 
+
+    The below command is only needed for first time setup of node dependencies
+    ```text
+    sbt clean a11y:test
+    ```
+    Then run
+    ```text
+    sbt test
+    ```
+3. Your test output will describe what you need to add to your spec to enable testing the page templates. All tests should be marked as `(pending)`
+   which will allow teams to progressively cover and fix all the pages in their service over time.
+    ```sbt
+    [info] FrontendAccessibilitySpec:
+    [info] views.html.ContactHmrcConfirmationPage
+    [info] - should be accessible (pending)
+    [info]   + Missing wiring - add the following to your renderViewByClass function: 
+    [info]   + case contactHmrcConfirmationPage: ContactHmrcConfirmationPage => render(contactHmrcConfirmationPage) 
+    [info] views.html.ContactHmrcPage
+    [info] - should be accessible (pending)
+    [info]   + Missing wiring - add the following to your renderViewByClass function: 
+    [info]   + case contactHmrcPage: ContactHmrcPage => render(contactHmrcPage) 
+    [info] views.html.ErrorPage
+    [info] - should be accessible (pending)
+    [info]   + Missing wiring - add the following to your renderViewByClass function: 
+    [info]   + case errorPage: ErrorPage => render(errorPage) 
+    [info] views.html.FeedbackConfirmationPage
+    [info] - should be accessible (pending)
+    [info]   + Missing wiring - add the following to your renderViewByClass function: 
+    [info]   + case feedbackConfirmationPage: FeedbackConfirmationPage => render(feedbackConfirmationPage) 
+    [info] views.html.FeedbackPage
+    [info] - should be accessible (pending)
+    [info]   + Missing wiring - add the following to your renderViewByClass function: 
+    [info]   + case feedbackPage: FeedbackPage => render(feedbackPage) 
+    ```
+
+    If you wish to run the spec via IntelliJ IDE test runner you will need to add a `program argument` 
+    to your tests Run/Debug configuration as seen below to get the `case code` output as above.
+    
+    ```text
+    -C uk.gov.hmrc.scalatestaccessibilitylinter.reporters.AutomaticAccessibilityReporter
+    ```
+    
+    One advantage of using the IntelliJ IDE test runner, is that it will give you the full code for all pending tests as seen below.
+    
+    ```scala
+    override def renderViewByClass: PartialFunction[Any, Html] = {
+      case accessibilityProblemConfirmationPage: AccessibilityProblemConfirmationPage => render(accessibilityProblemConfirmationPage)
+      case contactHmrcConfirmationPage: ContactHmrcConfirmationPage => render(contactHmrcConfirmationPage)
+      case contactHmrcPage: ContactHmrcPage => render(contactHmrcPage)
+      case errorPage: ErrorPage => render(errorPage)
+      case feedbackConfirmationPage: FeedbackConfirmationPage => render(feedbackConfirmationPage)
+      case feedbackPage: FeedbackPage => render(feedbackPage)
+    }
+    ```
+    
+    NOTE: This feature is an MVP currently, and we would like to expand functionality as we receive feedback from
+    teams using it. If you come across any issues please raise a support query with PlatUI or alternativley share your feedback in the
+    `team-plat-ui` Slack channel.
+
+## How to setup manual accessibility testing
+
+### Setting up the accessibility test folder
 
 All accessibility tests by default will live under the ``a11y`` folder in the project root directory, you may need to create
 this folder if it does not exist already.
