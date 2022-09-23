@@ -72,7 +72,26 @@ automatically scanning through your projects views for page templates.
 
 ### Setup
 
-1. Copy the template spec below into your project
+The accessibility test by default will live under the `a11y` folder in the project root directory, you may need to create
+this folder if it does not exist already.
+
+```
+example-project
+  ├─ src
+  ├─ test
+  ├─ a11y   <--- folder for accessibility tests
+```
+
+If you wish to override the base path of the `a11y` test folder you can apply the following settings with
+a custom path. This will also allow you to change the folder `a11y` name if you wish to.
+
+```scala
+.settings(
+    A11yTest / unmanagedSourceDirectories += (baseDirectory.value / "test" / "a11y")
+ )
+```
+
+1. Copy the template spec below into your configured a11y folder
 
     ```scala
     import org.scalacheck.Arbitrary
@@ -84,6 +103,15 @@ automatically scanning through your projects views for page templates.
     
     class FrontendAccessibilitySpec
       extends AutomaticAccessibilitySpec {
+   
+      // If you wish to override the GuiceApplicationBuilder to provide additional
+      // config for your service, you can do that by overriding fakeApplication 
+      /** example
+          override def fakeApplication(): Application =
+             new GuiceApplicationBuilder()
+                .configure()
+                .build()
+      */
     
       // Some view template parameters can't be completely arbitrary, 
       // but need to have sane values for pages to render properly.  
@@ -122,13 +150,9 @@ automatically scanning through your projects views for page templates.
 
 2. Run your tests 
 
-    The below command is only needed for first time setup of node dependencies
+    The below command will both install npm dependencies and run the accessibility tests
     ```text
     sbt clean a11y:test
-    ```
-    Then run
-    ```text
-    sbt test
     ```
 3. Your test output will describe what you need to add to your spec to enable testing the page templates. All tests should be marked as `(pending)`
    which will allow teams to progressively cover and fix all the pages in their service over time.
@@ -184,7 +208,7 @@ automatically scanning through your projects views for page templates.
 
 ### Setting up the accessibility test folder
 
-All accessibility tests by default will live under the ``a11y`` folder in the project root directory, you may need to create
+All accessibility tests by default will live under the `a11y` folder in the project root directory, you may need to create
 this folder if it does not exist already.
 
 ```
@@ -194,8 +218,8 @@ example-project
   ├─ a11y   <--- folder for accessibility tests
 ```
 
-If you wish to override the base path of the ``a11y`` test folder you can apply the following settings with
-a custom path. This will also allow you to change the folder ``a11y`` name if you wish to.
+If you wish to override the base path of the `a11y` test folder you can apply the following settings with
+a custom path. This will also allow you to change the folder `a11y` name if you wish to.
 
 ```scala
 .settings(
@@ -203,7 +227,7 @@ a custom path. This will also allow you to change the folder ``a11y`` name if yo
  )
 ```
 
-The example settings above would place the ``a11y`` folder under the test directory.
+The example settings above would place the `a11y` folder under the test directory.
 
 ```
 example-project
