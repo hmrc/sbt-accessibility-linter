@@ -54,7 +54,7 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
 
     lazy val a11yTestSettings: Seq[Setting[_]] =
       inConfig(A11yTest)(Defaults.testSettings) ++
-        Seq(unmanagedSourceDirectories in A11yTest := (baseDirectory in A11yTest)(base => Seq(base / "a11y")).value)
+        Seq(A11yTest / unmanagedSourceDirectories := (A11yTest / baseDirectory)(base => Seq(base / "a11y")).value)
   }
 
   import autoImport._

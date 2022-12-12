@@ -29,7 +29,7 @@ lazy val root = Project(libName, file("."))
         throw new MessageOnlyException("npm install and test failed")
       }
     },
-    (test in Test) := (test in Test).dependsOn(npmTest).value,
+    (Test / test) := (Test / test).dependsOn(npmTest).value,
     Compile / resourceGenerators += Def.task {
       val rootDirectory = baseDirectory.value
       val destination: File = (Compile / resourceManaged).value / "js"
