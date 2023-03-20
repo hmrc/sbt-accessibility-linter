@@ -1,7 +1,7 @@
 import scala.sys.process._
 
 val scala2_12 = "2.12.13"
-val scala2_13 = "2.13.7"
+val scala2_13 = "2.13.8"
 
 val libName = "sbt-accessibility-linter"
 val npmTest = TaskKey[Unit]("npm-test")
