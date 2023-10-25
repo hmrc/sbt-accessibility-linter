@@ -54,7 +54,10 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
 
     lazy val a11yTestSettings: Seq[Setting[_]] =
       inConfig(A11yTest)(Defaults.testSettings) ++
-        Seq(A11yTest / unmanagedSourceDirectories := (A11yTest / baseDirectory)(base => Seq(base / "a11y")).value)
+        Seq(
+          A11yTest / unmanagedSourceDirectories := (A11yTest / baseDirectory) (base => Seq(base / "a11y")).value,
+          A11yTest / test := (A11yTest / test).dependsOn(a11yInstall).value
+        )
   }
 
   import autoImport._
@@ -70,7 +73,6 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
     a11yRoot := a11yRootTask.value,
     a11yExtract := a11yExtractTask.value,
     a11yInstall := a11yInstallTask.value,
-    A11yTest / testOptions := Seq(Tests.Setup( () => a11yInstall.value )),
     libraryDependencies ++= Seq(
       "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.21.0" % Test
     ),
