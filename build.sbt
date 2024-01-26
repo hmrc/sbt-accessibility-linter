@@ -4,6 +4,8 @@ import scala.sys.process._
 
 ThisBuild / majorVersion := 1
 ThisBuild / isPublicArtefact := true
+ThisBuild / sbtPlugin := true
+ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
 
 val scala2_12 = "2.12.13"
 val scala2_13 = "2.13.12"
@@ -70,41 +72,36 @@ lazy val play28Plugin = project
     )
   )
 
-lazy val sbtPluginDependencies = project
-  .in(file("sbt-plugin-deps"))
-  .settings(
-    scalaVersion := scala2_12,
-    sbtPlugin := true,
-    libraryDependencies += "org.scala-sbt" % "scripted-sbt_2.12" % "1.9.7",
-    dependencyOverrides += "org.scala-lang.modules" %% "scala-xml" % "2.2.0"
-  )
-
 lazy val play29Plugin = project
   .in(file("play29"))
-  .dependsOn(sbtPluginDependencies)
   .enablePlugins(SbtPlugin)
-  .settings(scalaVersion := scala2_13)
+  .settings(
+    scalaVersion := scala2_13
+  )
   .settings(
     commonSettings,
     sbtPlugin := true,
     name := s"$libName-play29",
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play" % "2.9.0"
-    )
+    ),
+    dependencyOverrides ++= Seq("org.scala-sbt" % "scripted-sbt_2.12" % sbtVersion.value)
   )
 
 lazy val play30Plugin = project
   .in(file("play30"))
-  .dependsOn(sbtPluginDependencies)
   .enablePlugins(SbtPlugin)
-  .settings(scalaVersion := scala2_13)
+  .settings(
+    scalaVersion := scala2_13
+  )
   .settings(
     commonSettings,
     sbtPlugin := true,
     name := s"$libName-play30",
     libraryDependencies ++= Seq(
       "org.playframework" %% "play" % "3.0.0"
-    )
+    ),
+    dependencyOverrides ++= Seq("org.scala-sbt" % "scripted-sbt_2.12" % sbtVersion.value)
   )
 
 lazy val plugin = (project in file("."))
