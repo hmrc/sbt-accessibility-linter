@@ -1,9 +1,10 @@
 import scala.sys.process._
+import Generators._
 
 val scala2_12 = "2.12.13"
 val scala2_13 = "2.13.12"
 
-val libName = "sbt-accessibility-linter"
+val libName = "sbt-accessibility-linter-play-30"
 val npmTest = TaskKey[Unit]("npm-test")
 
 lazy val root = Project(libName, file("."))
@@ -53,6 +54,12 @@ lazy val root = Project(libName, file("."))
       Path.allSubpaths(destination)
         .collect { case (f, _) if !f.isDirectory => f }
         .toSeq
+    }.taskValue,
+    (Compile / sourceGenerators) += Def.task {
+      SbtAccessibilityLinter(
+        playVersion = "play-30",
+        (Compile / sourceManaged).value
+      )
     }.taskValue
   )
 
