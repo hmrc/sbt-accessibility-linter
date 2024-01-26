@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc
 
+import sbt.Keys._
 import sbt.librarymanagement.LibraryManagementSyntax
 import sbt.{Configuration, Def, Setting, inConfig, _}
-import sbt.Keys._
 
 import java.io.File
 import scala.collection.mutable.ListBuffer
@@ -71,9 +71,7 @@ object AccessibilityLinterPlugin extends AutoPlugin with LibraryManagementSyntax
     a11yExtract := a11yExtractTask.value,
     a11yInstall := a11yInstallTask.value,
     A11yTest / testOptions := Seq(Tests.Setup( () => a11yInstall.value )),
-    libraryDependencies ++= Seq(
-      "uk.gov.hmrc" %% "scalatest-accessibility-linter" % "0.22.0" % Test
-    ),
+    libraryDependencies += LinterVersionFinder.apply()
   ) ++ a11yTestSettings
 
   private def npmProcess(failureMessage: String)(base: File, args: String*): Int = {
