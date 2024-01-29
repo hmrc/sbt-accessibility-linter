@@ -23,6 +23,7 @@ How can we make the future versions of the sbt-accessibility-plugin compatible w
 * Option 2: Use reflection in the `sbt-accessibility-linter` to determine the consuming project's Play version and dynamically include the correct `scalatest-accessibility-linter` library.
 * Option 3: Employ macros to determine the Play version at compile time and include the appropriate `scalatest-accessibility-linter` library.
 * Option 4: Decouple the `scalatest-accessibility-linter` library from the `sbt-accessibility-linter` plugin.
+* Option 5: Only support one version of play at a time - so future updates for old play versions would have to be done as patch versions (changing artefact name when we change versions of play supported)
 
 ## Decision Outcome
 
