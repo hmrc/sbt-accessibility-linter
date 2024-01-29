@@ -43,7 +43,7 @@ Chosen option: ???
 ### Option 2: Reflection to Determine Play Version
 
 * Good, because it eliminates the need for different plugin versions.
-* Good, because it's relatively easy to implement.
+* Good, because it's relatively easy to implement. We already have an implementation with some test coverage contributed from @wolfendale
 * Bad, because reflection can lead to unexpected edge cases in the JVM environment. But because this is in test scope, and these tests aren't necessary to have they're just a nice to have, it's easy for teams to drop if there are any problems
 * Bad, because we're depending on structure of something that's outside the project (in Play). But it's unlikely to change, and we can have automated test coverage to catch problems.
 
