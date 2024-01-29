@@ -45,7 +45,7 @@ Chosen option: ???
 * Good, because it's relatively easy to implement.
 * Bad, because reflection can lead to unexpected edge cases in the JVM environment.
 
-### Option 3: Macros for Compile-Time Play Version Detection
+### Option 3: Create play-specific plugin versions - using macros to inject the right scalatest library versions
 
 * Good, because it identifies the Play version at compile time.
 * Bad, because macro usage can be complex and challenging to maintain.
