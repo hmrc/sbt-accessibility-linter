@@ -34,7 +34,7 @@ Chosen option: ???
 
 ## Pros and Cons of the Options
 
-### Option 1: Specific Plugin Version for Each Play Version
+### Option 1: Create play-specific plugin versions - using code gen to inject the right scalatest library version
 
 * Good, because it avoids the need for a multi-project build.
 * Bad, because it requires separate builds for each new Play version, increasing maintenance.
