@@ -1,6 +1,6 @@
 # Making the sbt-accessibility-plugin Compatible with various Play Framework versions
 
-* Status: proposed
+* Status: accepted
 * Deciders: PlatUI
 * Date: 29 Jan 2024
 
@@ -27,11 +27,18 @@ How can we make the future versions of the sbt-accessibility-plugin compatible w
 
 ## Decision Outcome
 
-Chosen option: ???
+Chosen option: "Option 2", because it streamlines the development process by removing the need for multiple plugin versions and is relatively easy to implement with existing test coverage. The risks associated with reflection are mitigated by its limited scope in testing environments.
 
 ### Positive Consequences
 
+* Eliminates the need to maintain different plugin versions for each Play Framework version.
+* Leveraging reflection for version detection simplifies the implementation process. Existing implementation with test coverage (contributed by @wolfendale) provides a strong starting point.
+* The plugin's use of reflection is confined to test scopes, which allows teams to easily omit tests if they encounter problems, maintaining flexibility in their development process.
+
 ### Negative Consequences
+
+* Using reflection can lead to unforeseen complications in the JVM environment. However, as this feature is only used in testing, the risks are relatively contained.
+* The solution depends on the structure of Play, which is outside the project. While changes in Play are unlikely, any modifications could impact the plugin. Automated test coverage is crucial to identify and address these issues promptly.
 
 ## Pros and Cons of the Options
 
@@ -49,7 +56,8 @@ Chosen option: ???
 
 ### Option 3: Create play-specific plugin versions - using macros to inject the right scalatest library versions
 
-* Good, because it identifies the Play version at compile time.
+* Good, because it fits with the existing use of PLAY_VERSION to identify different play versions - rather than having multiple ways (codegen)
+* Good, because we wouldn't risk any runtime problems like have a small risk of with reflection
 * Bad, because macro usage can be complex and challenging to maintain.
 
 ### Option 4: Make users add the right scalatest library for their version of play themselves
