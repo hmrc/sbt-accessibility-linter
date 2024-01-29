@@ -50,7 +50,7 @@ Chosen option: ???
 * Good, because it identifies the Play version at compile time.
 * Bad, because macro usage can be complex and challenging to maintain.
 
-### Option 4: Decouple scalatest Library from Plugin
+### Option 4: Make users add the right scalatest library for their version of play themselves
 
 * Good, because it removes the dependency on Play version within the plugin.
 * Bad, because teams need to manage both the plugin and the specific scalatest library for their Play version.
