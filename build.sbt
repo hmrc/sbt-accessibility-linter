@@ -1,6 +1,6 @@
 import scala.sys.process._
 
-val scala2_12 = "2.12.13"
+val scala2_12 = "2.12.18"
 val scala2_13 = "2.13.12"
 
 val libName = "sbt-accessibility-linter"

@@ -4,9 +4,10 @@
 This is an `sbt` plugin that can be used to identify accessibility issues in your HTML markup.
 
 It's inspired by [jest-axe](https://github.com/nickcolley/jest-axe) from the Node.js ecosystem, but designed to
-work with Scala frontend microservices. It also combines Axe checks with markup validation checks from VNU.
+work with Scala frontend microservices.
 
-:warning: **Important**: This tool does not guarantee what you build is accessible.
+> :warning: **Important** 
+> This tool does not guarantee what you build is accessible.
 
 `sbt-accessibility-linter` is a linter, it can identify common issues but cannot guarantee that your service will work 
 for all users.
@@ -332,9 +333,6 @@ the relevant guidance on the Deque University website. For example,
 [info]     + - Ensures all page content is contained by landmarks 
 [info]     +   (input) 
 [info]     +   https://dequeuniversity.com/rules/axe/4.1/region?application=axeAPI 
-[info]     + vnu found 2 potential problem(s): 
-[info]     + - Element “h3” not allowed as child of element “strong” in this context. (Suppressing further errors from this subtree.) 
-[info]     + - Duplicate ID “duty-deferment-balance”. 
 ```
 
 You can override the default output format by adding the following configuration to your `application.conf`:

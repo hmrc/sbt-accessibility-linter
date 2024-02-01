@@ -33,19 +33,4 @@ class ExampleSpec extends flatspec.AnyFlatSpec with Matchers with AccessibilityM
       </html>
     """ should not (passAccessibilityChecks)
   }
-  
-  "Page with input with duplicate attribute" should "fail vnu checks" in {
-    s"""
-      <!DOCTYPE html>
-      <html lang="en">
-        <head><title>Example</title></head>
-        <body>
-          <main>
-            <h1>Example</h1>
-            <label>Example <input type="text" type="text"></label>
-          </main>
-        </body>
-      </html>
-    """ should not (passAccessibilityChecks)
-  }
 }
