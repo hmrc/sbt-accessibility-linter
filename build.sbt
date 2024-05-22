@@ -1,7 +1,6 @@
 import scala.sys.process._
 
 val scala2_12 = "2.12.18"
-val scala2_13 = "2.13.12"
 
 val libName = "sbt-accessibility-linter"
 val npmTest = TaskKey[Unit]("npm-test")
@@ -11,7 +10,6 @@ lazy val root = Project(libName, file("."))
   .settings(
     name := libName,
     scalaVersion := scala2_12,
-    crossScalaVersions := Seq(scala2_12, scala2_13),
     isPublicArtefact := true,
     majorVersion := 0,
     libraryDependencies ++= Seq(
@@ -55,4 +53,3 @@ lazy val root = Project(libName, file("."))
         .toSeq
     }.taskValue
   )
-
