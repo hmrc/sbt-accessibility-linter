@@ -11,7 +11,7 @@ lazy val root = Project(libName, file("."))
     name := libName,
     scalaVersion := scala2_12,
     isPublicArtefact := true,
-    majorVersion := 0,
+    majorVersion := 1,
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "3.2.9" % "test",
       "com.vladsch.flexmark" %  "flexmark-all" % "0.35.10" % "test"

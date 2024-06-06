@@ -29,16 +29,19 @@ object LinterVersionFinder {
       val currentField = playVersionModule.info.decl(rm.TermName("current")).asTerm
       val playVersion = m.reflect(m.reflectModule(playVersionModule).instance).reflectField(currentField).get.toString
 
+      // Throughout this build there is scaffolding in place to support multiple versions of Play Framework
+      // At the time of writing there is only support for Play 3.0 but this maybe extended if future versions of Play Framework
+      // are released
+
       val playSuffix = playVersion match {
         case v if v.startsWith("3.") => "-play-30"
-        case v if v.startsWith("2.9") => "-play-29"
-        case _ => "-play-28"
+        case _ => throw new RuntimeException("Invalid Play framework version, only Play 3.0 supported")
       }
 
-      "uk.gov.hmrc" %% s"scalatest-accessibility-linter${playSuffix}" % "1.1.0-SNAPSHOT" % Test
+      "uk.gov.hmrc" %% s"scalatest-accessibility-linter$playSuffix" % "2.0.0" % Test
     } catch {
       case _: ScalaReflectionException =>
-        throw new RuntimeException("No version of Play! detected")
+        throw new RuntimeException("No version of Play framework detected")
     }
   }
 }

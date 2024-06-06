@@ -8,7 +8,7 @@ lazy val root = (project in file("."))
       val lib = libraryDependencies.value.find(_.name startsWith "scalatest-accessibility-linter-play-30")
 
       if (lib.isEmpty) {
-        sys.error("No scalatest-accessibility-linter-30 library found")
+        sys.error("No scalatest-accessibility-linter-play-30 library found")
       }
     }
   )
