@@ -1,0 +1,2 @@
+# TODO: we would expect `-> reload` to assert that `sbt reload` fails, but instead we are seeing test run failure, possibly due to `scriptedBatchReload` error
+-> reload

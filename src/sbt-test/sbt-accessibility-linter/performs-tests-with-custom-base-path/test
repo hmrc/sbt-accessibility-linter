@@ -1,4 +1,4 @@
-# checks that a11y:test installs the Node tools and runs the test suite
-> a11y:test
+# checks that A11y/test installs the Node tools and runs the test suite
+> A11y/test
 $ exists target/sbtaccessibilitylinter/js/node_modules/axe-core
 $ exists target/proof-tests-ran.txt
