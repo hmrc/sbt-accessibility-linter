@@ -6,5 +6,7 @@
   "GHSA-hrpp-h998-j3pp": "qs: devDependency, no risk given our usage",
   "GHSA-9c47-m6qq-7p4h": "json5: devDependency, no risk given our usage",
   "GHSA-p8p7-x288-28g6": "request: devDependency, no risk given our usage",
-  "GHSA-72xf-g2v4-qvf3": "tough-cookie: devDependency, no risk given our usage"
+  "GHSA-72xf-g2v4-qvf3": "tough-cookie: devDependency, no risk given our usage",
+  "GHSA-grv7-fg5c-xmjg": "braces: devDependency, no risk given our usage",
+  "GHSA-3h5v-q93c-6h6q": "ws: no risk given our usage as this is a test dependency in services"
 }
